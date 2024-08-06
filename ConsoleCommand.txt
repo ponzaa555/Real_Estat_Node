@@ -1,0 +1,2 @@
+console-ninja node --watch app.js
+npx prisma db push
