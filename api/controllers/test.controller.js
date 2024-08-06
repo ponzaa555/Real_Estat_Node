@@ -9,7 +9,6 @@ export const shouldBeLoggedIn = async (req, res) => {
 export const shouldBeAdmin = async (req, res) => {
     //verify token
     const token = req.cookies.token;
-
     if (!token) return res.status(401).json({ message: "Not Authenticated!" });
     // Decode Token
     jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {

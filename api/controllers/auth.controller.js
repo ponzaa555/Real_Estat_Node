@@ -7,10 +7,7 @@ export const register = async (req, res) => {
 
     try {
 
-
-
         // HASH THE PASSWORD
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
         console.log(hashedPassword);
@@ -57,7 +54,7 @@ export const login = async (req, res) => {
             isAdmin:true,
         }, process.env.JWT_SECRET_KEY, { expiresIn: age })
         // cut password off
-        const { password: userPassword, ...userInfo } = user;
+        const { password:userPassword, ...userInfo } = user;
         res
             .cookie("token", token, {
                 httpOnly: true,

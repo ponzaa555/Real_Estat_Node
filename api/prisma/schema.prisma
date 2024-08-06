@@ -21,4 +21,87 @@ model User {
   password  String   @unique
   avatar    String?
   createdAt DateTime @default(now())
+  posts     Post[] // create relational between table
+  savePosts  SavePost[]
+  chats Chat[] @relation(fields: [chatIDs], references: [id])
+  chatIDs String[] @db.ObjectId
+}
+
+model Post {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  price      Int
+  images     String[]
+  address     String
+  city       String
+  bedroom    Int
+  bathroom   Int
+  latitude   String
+  longitude String
+  type       Type
+  property   Property
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String      @db.ObjectId
+  postDetail PostDetail?
+  savePosts  SavePost[]
+}
+
+model PostDetail {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  desc       String
+  utilities  String?
+  pet        String?
+  income     String?
+  size       Int?
+  school     Int?
+  bus        Int?
+  restaurant Int?
+  post       Post    @relation(fields: [postId], references: [id])
+  postId     String  @unique @db.ObjectId
+}
+
+model SavePost{
+   id         String  @id @default(auto()) @map("_id") @db.ObjectId
+   user User @relation(fields: [userId] , references: [id])
+   post Post @relation(fields: [postId] , references: [id])
+   userId String @db.ObjectId 
+   postId String @db.ObjectId 
+   createdAt DateTime @default(now())
+
+   //cannot สร้าง safepost เดิม 2 อัน
+   @@unique([userId,postId])
+}
+
+
+// create many to many in Mogodb
+model Chat{
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  users User[] @relation(fields: [userIDs],references: [id])
+  userIDs String[] @db.ObjectId
+  createdAt DateTime @default(now())
+  seenBy String[] @db.ObjectId
+  messages Message[]
+  lastMessage String?
+}
+
+model Message{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  text String
+  userId String
+  chat Chat @relation(fields: [chatId] , references: [id])
+  chatId String @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+enum Type {
+  buy
+  rent
+}
+
+enum Property {
+  apartment
+  house
+  condo
+  land
 }
